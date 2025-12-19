@@ -109,3 +109,53 @@ export const sendOtp = async (req, res) => {
         return res.status(500).json(`send otp error ${error}`)
     }
 }
+
+
+//verify otp controller
+export const verifyOtp = async (req, res) => {
+    try {
+        const { email, otp } = req.body
+        const user = await User.findOne({ email })
+
+        //condition to check 
+        if (!user || user.resetOtp != otp || user.otpExpires < Date.now()) {
+            return res.status(400).json({ message: "invalid/expired otp" })
+        }
+
+        //change in model
+        user.isOtpVerified = true
+        user.resetOtp = undefined
+        user.otpExpires = undefined
+        //save user
+        await user.save()
+
+        //response
+        return res.status(200).json({ message: "otp verify successfully" })
+    } catch (error) {
+        return res.status(500).json(`verify otp error ${error}`)
+    }
+}
+
+//reset pass controller
+export const resetPassword = async (req, res) => {
+    try {
+        const { email, newPassword } = req.body
+        const user = await User.findOne({ email })
+        //check condition
+        if (!user || !user.isOtpVerified) {
+            return res.status(400).json({ message: "otp verification required" })
+        }
+        //hash pass
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
+        //changes in model
+        user.password = hashedPassword
+        user.isOtpVerified = false
+
+        //save user
+        await user.save()
+        //response
+        return res.status(200).json({ message: "password reset successfully" })
+    } catch (error) {
+        return res.status(500).json(`reset password error ${error}`)
+    }
+}
