@@ -10,6 +10,8 @@ dotenv.config()
         console.log("DataBase Connected");
         
     } catch (error) {
+           console.log(error);
+        
         console.log("DataBase connection error");
     }
 }

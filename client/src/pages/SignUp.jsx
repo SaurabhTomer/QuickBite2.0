@@ -7,6 +7,7 @@ import { serverUrl } from "../App";
 import axios from "axios";
 import { ClipLoader } from "react-spinners"
 
+
 //signup function
 function SignUp() {
   //colors

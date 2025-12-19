@@ -2,6 +2,7 @@ import { Route , Routes } from 'react-router-dom'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
+import Home from './pages/Home'
 
 
 //backend url
@@ -14,25 +15,25 @@ function App() {
         {/* home route */}
         <Route
         path="/"
-        element={userData ? <Home /> : <Navigate to={"/signin"} />}
+        element={ <Home />}
       />
 
         {/* signup route */}
        <Route
         path="/signup"
-        element={!userData ? <SignUp /> : <Navigate to={"/"} />}
+        element={ <SignUp  />}
       />
 
       {/* signin route */}
       <Route
         path="/signin"
-        element={!userData ? <SignIn /> : <Navigate to={"/"} />}
+        element={ <SignIn />}
       />
 
       {/* forgot password route */}
       <Route
         path="/forgot-password"
-        element={!userData ? <ForgotPassword /> : <Navigate to={"/"} />}
+        element={<ForgotPassword />}
       />
     </Routes>
   )
