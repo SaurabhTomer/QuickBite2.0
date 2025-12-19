@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { serverUrl } from "../App";
 import axios from "axios";
 import { ClipLoader } from "react-spinners"
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 
 //signup function
@@ -52,6 +54,28 @@ function SignUp() {
     }
   };
 
+
+  //google auth handler function
+  const handleGoogleAuth = async () => {
+    //take mobile number first
+    if (!mobile) {
+      return setErr("mobile no is required")
+    }
+    const provider = new GoogleAuthProvider()
+    const result = await signInWithPopup(auth, provider)
+    try {
+      const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
+        fullName: result.user.displayName,
+        email: result.user.email,
+        role,
+        mobile
+      }, { withCredentials: true })
+      // dispatch(setUserData(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     // main div
     <div
@@ -59,7 +83,7 @@ function SignUp() {
       style={{ backgroundColor: bgColor }}
     >
 
-         {/* inner div */}
+      {/* inner div */}
       <div
         className={`bg-white rounded-xl shadow-lg w-full max-w-md p-8 border `}
         style={{
@@ -180,9 +204,9 @@ function SignUp() {
                   role == r
                     ? { backgroundColor: primaryColor, color: "white" }
                     : {
-                        border: `1px solid ${primaryColor}`,
-                        color: primaryColor,
-                      }
+                      border: `1px solid ${primaryColor}`,
+                      color: primaryColor,
+                    }
                 }
               >
                 {r}
@@ -204,7 +228,7 @@ function SignUp() {
 
         <button
           className="w-full mt-4 flex items-center justify-center gap-2 border rounded-lg px-4 py-2 transition cursor-pointer duration-200 border-gray-400 hover:bg-gray-100"
-        //   onClick={handleGoogleAuth}
+          onClick={handleGoogleAuth}
         >
           <FcGoogle size={20} />
           <span>Sign up with Google</span>

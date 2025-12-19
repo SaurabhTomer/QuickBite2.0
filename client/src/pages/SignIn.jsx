@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { ClipLoader } from "react-spinners";
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 function SignIn() {
   //colors
@@ -40,11 +42,24 @@ function SignIn() {
       setErr("");
       setLoading(false);
     } catch (error) {
-      setErr(error?.response?.data?.message  || "SignIn failed");
+      setErr(error?.response?.data?.message || "SignIn failed");
       setLoading(false);
     }
   };
 
+//handle google auth function
+  const handleGoogleAuth = async () => {
+    const provider = new GoogleAuthProvider()
+    const result = await signInWithPopup(auth, provider)
+    try {
+      const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`, {
+        email: result.user.email,
+      }, { withCredentials: true })
+      dispatch(setUserData(data))
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     // main div
     <div
