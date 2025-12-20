@@ -79,10 +79,13 @@ function FoodCard({ data }) {
                 </h1>
                 {/* render stars */}
                 <div className="flex items-center gap-1 mt-1">
+
                     {renderStars(data.rating?.average || 0)}
+                    {/* how much rating is done */}
                     <span className="text-xs text-gray-500">
                         {data.rating?.count || 0}
                     </span>
+
                 </div>
             </div>
 
