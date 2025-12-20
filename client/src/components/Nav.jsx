@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 function Nav() {
 
     // useselector
-    const { userData , city } = useSelector(
+    const { userData , currentCity } = useSelector(
         (state) => state.user
     );
     const { myShopData } = useSelector((state) => state.owner);
@@ -79,7 +79,7 @@ function Nav() {
                     {/* location div */}
                     <div className="flex items-center w-[30%] overflow-hidden gap-2.5 px-2.5 border-r-2 border-gray-400">
                         <FaLocationDot size={25} className=" text-[#ff4d2d]" />
-                        <div className="w-[80%] truncate text-gray-600">{city}</div>
+                        <div className="w-[80%] truncate text-gray-600">{currentCity}</div>
                     </div>
                     {/* query param */}
                     <div className="w-[80%] flex items-center gap-2.5">
@@ -102,7 +102,7 @@ function Nav() {
                 <div className="md:w-[60%] lg:w-[40%] h-17.5 bg-white shadow-xl rounded-lg items-center gap-5 hidden md:flex">
                     <div className="flex items-center w-[30%] overflow-hidden gap-2.5 px-2.5 border-r-2 border-gray-400">
                         <FaLocationDot size={25} className=" text-[#ff4d2d]" />
-                        <div className="w-[80%] truncate text-gray-600">{city}</div>
+                        <div className="w-[80%] truncate text-gray-600">{currentCity}</div>
                     </div>
                     <div className="w-[80%] flex items-center gap-2.5">
                         <IoIosSearch size={25} className="text-[#ff4d2d]" />
@@ -146,14 +146,14 @@ function Nav() {
                                 {/* add item  */}
                                 <button
                                     className="hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]"
-                                //   onClick={() => navigate("/add-item")}
+                                  onClick={() => navigate("/add-item")}
                                 >
                                     <FaPlus size={20} />
                                     <span>Add Food Item</span>
                                 </button>
                                 <button
                                     className="md:hidden flex items-center  p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]"
-                                //   onClick={() => navigate("/add-item")}
+                                  onClick={() => navigate("/add-item")}
                                 >
                                     <FaPlus size={20} />
                                 </button>
@@ -162,7 +162,7 @@ function Nav() {
 
                         <div
                             className="hidden md:flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium"
-                        //   onClick={() => navigate("/my-orders")}
+                          onClick={() => navigate("/my-orders")}
                         >
                             <TbReceipt2 size={20} />
                             <span>My Orders</span>
@@ -170,7 +170,7 @@ function Nav() {
 
                         <div
                             className="md:hidden flex items-center gap-2 cursor-pointer relative px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] font-medium"
-                        //   onClick={() => navigate("/my-orders")}
+                          onClick={() => navigate("/my-orders")}
                         >
                             <TbReceipt2 size={20} />
                         </div>
@@ -194,7 +194,7 @@ function Nav() {
 
                         <button
                             className="hidden md:block px-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium"
-                        //   onClick={() => navigate("/my-orders")}
+                          onClick={() => navigate("/my-orders")}
                         >
                             My Orders
                         </button>
@@ -222,7 +222,7 @@ function Nav() {
                         {userData.role == "user" && (
                             <div
                                 className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer"
-                            // onClick={() => navigate("/my-orders")}
+                            onClick={() => navigate("/my-orders")}
                             >
                                 My Orders
                             </div>
