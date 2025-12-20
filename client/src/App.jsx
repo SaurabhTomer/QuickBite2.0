@@ -4,6 +4,7 @@ import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import Home from './pages/Home'
 import useGetCurrentUser from './hooks/useGetCurrentUser'
+import { useSelector } from 'react-redux'
 
 
 //backend url
@@ -13,6 +14,7 @@ function App() {
 
   // all hooks
   useGetCurrentUser();
+  const {userData} = useSelector(state => state.user)
 
   
   return (

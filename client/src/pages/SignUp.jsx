@@ -8,6 +8,7 @@ import axios from "axios";
 import { ClipLoader } from "react-spinners"
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
+import { useDispatch } from "react-redux";
 
 
 //signup function
@@ -27,7 +28,9 @@ function SignUp() {
   const [mobile, setMobile] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
-  // const dispatch=useDispatch()
+
+  // hook to set data 
+  const dispatch=useDispatch()
   const navigate = useNavigate();
 
   //signup handler function
@@ -45,7 +48,7 @@ function SignUp() {
         },
         { withCredentials: true }
       );
-      // dispatch(setUserData(result.data))
+      dispatch(setUserData(result.data))
       setErr("");
       setLoading(false);
     } catch (error) {
@@ -70,7 +73,7 @@ function SignUp() {
         role,
         mobile
       }, { withCredentials: true })
-      // dispatch(setUserData(data))
+      dispatch(setUserData(data))
     } catch (error) {
       console.log(error)
     }
