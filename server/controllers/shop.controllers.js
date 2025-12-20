@@ -1,7 +1,7 @@
 import Shop from "../models/shop.model.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 
-// funtionn to create or edit shop
+// funtion to create or edit shop
 export const createEditShop = async (req, res) => {
   try {
     //fetch data
@@ -14,8 +14,8 @@ export const createEditShop = async (req, res) => {
       console.log(req.file);
       image = await uploadOnCloudinary(req.file.path);
     }
-    //find if shop exists or not of user
 
+    //find if shop exists or not of user
     let shop = await Shop.findOne({ owner: req.userId });
 
     //if shop does not  exists for this user 

@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.routes.js';
 import cors from 'cors';
 import userRouter from './routes/user.routes.js';
+import shopRouter from './routes/shop.routes.js';
 
 
 const port = process.env.PORT || 5000 
@@ -24,6 +25,8 @@ app.use(cookieParser())
 app.use("/api/auth" , authRouter)
 //user routes
 app.use("/api/user" , userRouter)
+//shop routes
+app.use("/api/shop" , shopRouter)
 
 
 
