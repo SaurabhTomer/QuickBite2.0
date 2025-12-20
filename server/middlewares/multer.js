@@ -1,10 +1,11 @@
 import multer from "multer"
 
 // funtion which stores file on public folder
+
 const storage = multer.diskStorage({
     // where file is staying
    destination : (req,file,cb)=>{
-    //kiuki ye same foler main h
+    //kiuki ye same folder main h
     cb(null,"./public")
    },
 
