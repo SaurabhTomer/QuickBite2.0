@@ -76,3 +76,44 @@ export const editItem = async (req, res) => {
         return res.status(500).json({ message: `edit item error ${error}` })
     }
 }
+
+//get item by id controller
+export const getItemById = async (req, res) => {
+    try {
+        const itemId = req.params.itemId
+        const item = await Item.findById(itemId)
+        if (!item) {
+            return res.status(400).json({ message: "item not found" })
+        }
+        return res.status(200).json(item)
+    } catch (error) {
+        return res.status(500).json({ message: `get item error ${error}` })
+    }
+}
+
+//delete item controller
+export const deleteItem = async (req, res) => {
+    try {
+        //took id from params
+        const itemId = req.params.itemId
+        const item = await Item.findByIdAndDelete(itemId)
+        if (!item) {
+            return res.status(400).json({ message: "item not found" })
+        }
+        // find user of shop
+        const shop = await Shop.findOne({ owner: req.userId })
+        //shop mai items array of update krenge (i.e; items array ai jo item params vali itemid k eqaul h usko nikl do)
+        shop.items = shop.items.filter(i => i !== item._id)
+        //svae update shop
+        await shop.save()
+        //populate all items of shop
+        await shop.populate({
+            path: "items",
+            options: { sort: { updatedAt: -1 } }
+        })
+        return res.status(200).json(shop)
+
+    } catch (error) {
+        return res.status(500).json({ message: `delete item error ${error}` })
+    }
+}

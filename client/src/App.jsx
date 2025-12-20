@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import useGetCurrentUser from './hooks/useGetCurrentUser'
 import { useSelector } from 'react-redux'
 import useGetCity from './hooks/useGetCity'
+import useGetMyshop from './hooks/useGetMyShop'
 
 
 //backend url
@@ -16,6 +17,8 @@ function App() {
   // all hooks
   useGetCurrentUser();
   useGetCity();
+  useGetMyshop();
+  
   const {userData} = useSelector(state => state.user)
 
   

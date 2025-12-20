@@ -19,6 +19,7 @@ function Nav() {
     const { userData , city } = useSelector(
         (state) => state.user
     );
+    const { myShopData } = useSelector((state) => state.owner);
 
     //usestate
     const [showInfo, setShowInfo] = useState(false);
@@ -26,7 +27,6 @@ function Nav() {
     const [query, setQuery] = useState("");
     
     // hooks
-    const { myShopData } = useSelector((state) => state.owner);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -140,6 +140,7 @@ function Nav() {
                 {/* nav if role is owner */}
                 {userData.role == "owner" ? (
                     <>
+                    {/* if mmy shop data is present */}
                         {myShopData && (
                             <>
                                 {/* add item  */}
