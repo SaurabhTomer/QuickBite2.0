@@ -3,10 +3,11 @@ import dotenv from 'dotenv'
 dotenv.config()
 import { connectDB } from './config/connectDB.js';
 import cookieParser from 'cookie-parser';
-import authRouter from './routes/auth.routes.js';
 import cors from 'cors';
+import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
 import shopRouter from './routes/shop.routes.js';
+import itemRouter from './routes/item.routes.js';
 
 
 const port = process.env.PORT || 5000 
@@ -27,6 +28,8 @@ app.use("/api/auth" , authRouter)
 app.use("/api/user" , userRouter)
 //shop routes
 app.use("/api/shop" , shopRouter)
+//item routes
+app.use("/api/item" , itemRouter)
 
 
 

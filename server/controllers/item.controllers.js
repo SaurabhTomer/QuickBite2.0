@@ -35,11 +35,44 @@ export const addItem = async (req, res) => {
             path: "items",
             options: { sort: { updatedAt: -1 } }
         })
-        
+
         //response
         return res.status(201).json(shop)
 
     } catch (error) {
         return res.status(500).json({ message: `add item error ${error}` })
+    }
+}
+
+//edit item controller
+export const editItem = async (req, res) => {
+    try {
+
+        //fetch itemisfrom params  and details from body
+        const itemId = req.params.itemId
+        const { name, category, foodType, price } = req.body
+        let image;
+        if (req.file) {
+            image = await uploadOnCloudinary(req.file.path)
+        }
+        //find item and update
+        const item = await Item.findByIdAndUpdate(itemId, {
+            name, category, foodType, price, image
+        }, { new: true })
+
+        // if item is not present
+        if (!item) {
+            return res.status(400).json({ message: "item not found" })
+        }
+        //return all items of shop data 
+        const shop = await Shop.findOne({ owner: req.userId }).populate({
+            path: "items",
+            options: { sort: { updatedAt: -1 } }
+        })
+        //rsponse
+        return res.status(200).json(shop)
+
+    } catch (error) {
+        return res.status(500).json({ message: `edit item error ${error}` })
     }
 }
