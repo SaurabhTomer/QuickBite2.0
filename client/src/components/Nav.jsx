@@ -142,7 +142,7 @@ function Nav() {
                     <>
                         {myShopData && (
                             <>
-                                {" "}
+                                {/* add item  */}
                                 <button
                                     className="hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10 text-[#ff4d2d]"
                                 //   onClick={() => navigate("/add-item")}
@@ -176,6 +176,7 @@ function Nav() {
                     </>
                 ) : (
                     <>
+                    {/* cart items length */}
                         {userData.role == "user" && (
                             <div
                                 className="relative cursor-pointer"

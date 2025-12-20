@@ -50,3 +50,20 @@ export const createEditShop = async (req, res) => {
     return res.status(500).json({ message: `create shop error ${error}` });
   }
 };
+
+
+//get my shop controller
+export const getMyShop=async (req,res) => {
+    try {
+        const shop=await Shop.findOne({owner:req.userId}).populate("owner").populate({
+            path:"items",
+            options:{sort:{updatedAt:-1}}
+        })
+        if(!shop){
+            return null
+        }
+        return res.status(200).json(shop)
+    } catch (error) {
+        return res.status(500).json({message:`get my shop error ${error}`})
+    }
+}
