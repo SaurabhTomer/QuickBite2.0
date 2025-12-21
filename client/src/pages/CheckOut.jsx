@@ -41,7 +41,7 @@ function CheckOut() {
     const apiKey = import.meta.env.VITE_GEOAPIKEY
 
 
-    //delivery fee
+    //delivery fee if amount is greater than 500 then delivery is free
     const deliveryFee = totalAmount > 500 ? 0 : 40
     const AmountWithDeliveryFee = totalAmount + deliveryFee
 
@@ -271,17 +271,17 @@ function CheckOut() {
                         ))}
 
                         <hr className='border-gray-200 my-2' />
-                        
+                        {/* amount */}
                         <div className='flex justify-between font-medium text-gray-800'>
                             <span>Subtotal</span>
                             <span>{totalAmount}</span>
                         </div>
-
+                        {/* delivery fee discount  */}
                         <div className='flex justify-between text-gray-700'>
                             <span>Delivery Fee</span>
                             <span>{deliveryFee == 0 ? "Free" : deliveryFee}</span>
                         </div>
-
+                        {/* total amount with delivery  fee */}
                         <div className='flex justify-between text-lg font-bold text-[#ff4d2d] pt-2'>
                             <span>Total</span>
                             <span>{AmountWithDeliveryFee}</span>
