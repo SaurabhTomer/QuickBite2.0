@@ -8,7 +8,7 @@ import {
   setCurrentState,
   setUserData,
 } from "../redux/userSlice";
-// import { setAddress, setLocation } from '../redux/mapSlice'
+import { setAddress, setLocation } from '../redux/mapSlice'
 
 function useGetCity() {
 
@@ -47,13 +47,14 @@ function useGetCity() {
       //set state on userslice state
       dispatch(setCurrentState(result?.data?.results[0].state));
 
-      //set address on userslaice address
+      //setcurrent address on userslaice address
       dispatch(
         setCurrentAddress(
           result?.data?.results[0].address_line2 ||
             result?.data?.results[0].address_line1
         )
       );
+      //set address
       dispatch(setAddress(result?.data?.results[0].address_line2));
     });
 
