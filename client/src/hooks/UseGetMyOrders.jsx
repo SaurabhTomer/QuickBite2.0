@@ -11,7 +11,7 @@ function useGetMyOrders() {
     const { userData } = useSelector(state => state.user)
 
     useEffect(() => {
-        //fetching orders data
+        //fetching orders data for role(user , owner)
         const fetchOrders = async () => {
             try {
                 const result = await axios.get(`${serverUrl}/api/order/my-orders`, { withCredentials: true })
