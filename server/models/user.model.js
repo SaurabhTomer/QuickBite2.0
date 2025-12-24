@@ -33,9 +33,25 @@ const userSchema = new mongoose.Schema({
     otpExpires:{
         type:Date
     },
+      location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point'
+        },
+
+        coordinates: {
+            type: [Number],
+            default: [0, 0]     // longitude , latitude
+        }
+    }
 
     
 } , {timestamps:true})
+
+
+// indicates mongoose that treat this location as map to change location
+userSchema.index({ location: '2dsphere' })
 
  const User = mongoose.model("User" , userSchema)
 
