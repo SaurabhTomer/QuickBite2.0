@@ -94,68 +94,71 @@ function CheckOut() {
         }
     }
 
-    //   const handlePlaceOrder=async () => {
-    //     try {
-    //       const result=await axios.post(`${serverUrl}/api/order/place-order`,{
-    //         paymentMethod,
-    //         deliveryAddress:{
-    //           text:addressInput,
-    //           latitude:location.lat,
-    //           longitude:location.lon
-    //         },
-    //         totalAmount:AmountWithDeliveryFee,
-    //         cartItems
-    //       },{withCredentials:true})
+    //function to handle payment 
+    const handlePlaceOrder = async () => {
+        try {
+            const result = await axios.post(`${serverUrl}/api/order/place-order`, {
+                paymentMethod,
+                deliveryAddress: {
+                    text: addressInput,
+                    latitude: location.lat,
+                    longitude: location.lon
+                },
+                totalAmount: AmountWithDeliveryFee,
+                cartItems
+            }, { withCredentials: true })
 
-    //       if(paymentMethod=="cod"){
-    //       dispatch(addMyOrder(result.data))
-    //       navigate("/order-placed")
-    //       }else{
-    //         const orderId=result.data.orderId
-    //         const razorOrder=result.data.razorOrder
-    //           openRazorpayWindow(orderId,razorOrder)
-    //        }
+            if (paymentMethod == "cod") {
+                dispatch(addMyOrder(result.data))
+                navigate("/order-placed")
+            } else {
+                //online payment
+                const orderId = result.data.orderId
+                const razorOrder = result.data.razorOrder
+                openRazorpayWindow(orderId, razorOrder) //calls function
+            }
 
-    //     } catch (error) {
-    //       console.log(error)
-    //     }
-    //   }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-    // const openRazorpayWindow=(orderId,razorOrder)=>{
+    const openRazorpayWindow = (orderId, razorOrder) => {
 
-    //   const options={
-    //  key:import.meta.env.VITE_RAZORPAY_KEY_ID,
-    //  amouimport { current } from '@reduxjs/toolkit';
-    nt: razorOrder.amount,
-        //  currency:'INR',
-        //  name:"Vingo",
-        //  description:"Food Delivery Website",
-        //  order_id:razorOrder.id,
-        //  handler:async function (response) {
-        //   try {
-        //     const result=await axios.post(`${serverUrl}/api/order/verify-payment`,{
-        //       razorpay_payment_id:response.razorpay_payment_id,
-        //       orderId
-        //     },{withCredentials:true})
-        //         dispatch(addMyOrder(result.data))
-        //       navigate("/order-placed")
-        //   } catch (error) {
-        //     console.log(error)
-        //   }
-        //  }
-        //   }
+        //options for which we open window (what details they holds)
+        const options = {
+            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+            amount: razorOrder.amount,
+            currency: 'INR',
+            name: "QuickBite",
+            description: "Food Delivery Website",
+            order_id: razorOrder.id,
 
-        //   const rzp=new window.Razorpay(options)
-        //   rzp.open()
+            //handler function used to fetch verify payment controller when payment is done while window is open
+            handler: async function (response) {
+                try {
+                    const result = await axios.post(`${serverUrl}/api/order/verify-payment`, {
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        orderId
+                    }, { withCredentials: true })
+                    dispatch(addMyOrder(result.data))
+                    navigate("/order-placed")
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }
+        //this opens razorpay window 
+        const rzp = new window.Razorpay(options)
+        rzp.open()
 
 
-        // }
+    }
 
-
-        //calls when ever address changes
-        useEffect(() => {
-            setAddressInput(address)
-        }, [address])
+    //calls when ever address changes
+    useEffect(() => {
+        setAddressInput(address)
+    }, [address])
 
 
     return (
@@ -291,10 +294,10 @@ function CheckOut() {
                 </section>
 
                 {/* button */}
-                <button className='w-full bg-[#ff4d2d] hover:bg-[#e64526] text-white py-3 rounded-xl font-semibold' 
-                onClick={handlePlaceOrder}>
-                     {paymentMethod == "cod" ? "Place Order" : "Pay & Place Order"}
-                     </button>
+                <button className='w-full bg-[#ff4d2d] hover:bg-[#e64526] text-white py-3 rounded-xl font-semibold'
+                    onClick={handlePlaceOrder}>
+                    {paymentMethod == "cod" ? "Place Order" : "Pay & Place Order"}
+                </button>
 
             </div>
         </div>

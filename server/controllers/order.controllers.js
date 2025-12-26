@@ -79,9 +79,10 @@ export const placeOrder = async (req, res) => {
                 totalAmount,
                 shopOrders,
                 razorpayOrderId: razorOrder.id,     // id recived from razorpay
-                payment: false
+                payment: false                      //payment not  done yet
             })
 
+            //sends razororder and order id
             return res.status(200).json({
                 razorOrder,
                 orderId: newOrder._id,
@@ -108,6 +109,46 @@ export const placeOrder = async (req, res) => {
         return res.status(201).json(newOrder)
     } catch (error) {
         return res.status(500).json({ message: `place order error ${error}` })
+    }
+}
+
+
+//controller to verify online payment
+export const verifyPayment = async (req, res) => {
+    try {
+        //fetch orderid and razorpay id
+        const { razorpay_payment_id, orderId } = req.body
+        //this checks order is completed or not
+        const payment = await instance.payments.fetch(razorpay_payment_id)
+
+        //check payment 
+        if (!payment || payment.status != "captured") {
+            return res.status(400).json({ message: "payment not captured" })
+        }
+        //find order
+        const order = await Order.findById(orderId)
+        if (!order) {
+            return res.status(400).json({ message: "order not found" })
+        }
+
+
+        //change in model
+        order.payment = true
+        order.razorpayPaymentId = razorpay_payment_id
+        await order.save()
+
+        await order.populate("shopOrders.shopOrderItems.item", "name image price")
+        await order.populate("shopOrders.shop", "name")
+        await order.populate("shopOrders.owner", "name socketId")
+        await order.populate("user", "name email mobile")
+
+
+
+
+        return res.status(200).json(order)
+
+    } catch (error) {
+        return res.status(500).json({ message: `verify payment  error ${error}` })
     }
 }
 
