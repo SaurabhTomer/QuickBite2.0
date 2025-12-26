@@ -268,9 +268,12 @@ export const acceptOrder = async (req, res) => {
 }
 
 
-//controller to get current oder to delivery boy
+// Controller to get the current assigned order for a delivery boy
 export const getCurrentOrder = async (req, res) => {
     try {
+        // Find the delivery assignment where:
+        // - assignedTo is the logged-in delivery boy
+        // - status is "assigned" (order is not completed yet)
         const assignment = await DeliveryAssignment.findOne({
             assignedTo: req.userId,
             status: "assigned"
@@ -280,34 +283,47 @@ export const getCurrentOrder = async (req, res) => {
             .populate({
                 path: "order",
                 populate: [{ path: "user", select: "fullName email location mobile" }]
-
             })
 
+        // If no assignment is found
         if (!assignment) {
             return res.status(400).json({ message: "assignment not found" })
         }
+
+        // If assignment exists but order is missing
         if (!assignment.order) {
             return res.status(400).json({ message: "order not found" })
         }
 
-        const shopOrder = assignment.order.shopOrders.find(so => String(so._id) == String(assignment.shopOrderId))
+        // Find the specific shopOrder related to this assignment
+        const shopOrder = assignment.order.shopOrders.find(
+            so => String(so._id) == String(assignment.shopOrderId)
+        )
 
+        // If shopOrder is not found
         if (!shopOrder) {
             return res.status(400).json({ message: "shopOrder not found" })
         }
 
+        // Initialize delivery boy location
         let deliveryBoyLocation = { lat: null, lon: null }
+
+        // If location coordinates exist (longitude, latitude)
         if (assignment.assignedTo.location.coordinates.length == 2) {
             deliveryBoyLocation.lat = assignment.assignedTo.location.coordinates[1]
             deliveryBoyLocation.lon = assignment.assignedTo.location.coordinates[0]
         }
 
+        // Initialize customer location
         let customerLocation = { lat: null, lon: null }
+
+        // If delivery address exists, get customer latitude and longitude
         if (assignment.order.deliveryAddress) {
             customerLocation.lat = assignment.order.deliveryAddress.latitude
             customerLocation.lon = assignment.order.deliveryAddress.longitude
         }
 
+        // Send the required order and location data to frontend
         return res.status(200).json({
             _id: assignment.order._id,
             user: assignment.order.user,
@@ -317,11 +333,11 @@ export const getCurrentOrder = async (req, res) => {
             customerLocation
         })
 
-
     } catch (error) {
-
+        return res.status(500).json({ message: `get current order error ${error}` })
     }
 }
+
 
 // controller to get order by id
 export const getOrderById = async (req, res) => {
