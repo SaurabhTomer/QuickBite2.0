@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux'
 import useGetCity from './hooks/useGetCity'
 import useGetMyshop from './hooks/useGetMyShop'
 import useGetShopByCity from './hooks/useGetShopByCity'
+import { useEffect } from 'react'
+import { setSocket } from './redux/userSlice'
 
 
 //backend url
@@ -21,7 +23,13 @@ function App() {
   useGetMyshop();
   useGetShopByCity();
 
-  
+  useEffect(() => {
+    const socketInstance = io(serverUrl , {withCredentials:true})
+    dispatchEvent(setSocket(socketInstance))
+    socketInstance.on('connect' , (socket) => {
+      
+    })
+  } , [])
   const {userData} = useSelector(state => state.user)
 
   
