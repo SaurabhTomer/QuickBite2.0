@@ -1,66 +1,125 @@
-import { Route , Routes } from 'react-router-dom'
-import SignIn from './pages/SignIn'
-import SignUp from './pages/SignUp'
-import ForgotPassword from './pages/ForgotPassword'
-import Home from './pages/Home'
-import useGetCurrentUser from './hooks/useGetCurrentUser'
-import { useSelector } from 'react-redux'
-import useGetCity from './hooks/useGetCity'
-import useGetMyshop from './hooks/useGetMyShop'
-import useGetShopByCity from './hooks/useGetShopByCity'
-import { useEffect } from 'react'
-import { setSocket } from './redux/userSlice'
+
+import { Navigate, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+import ForgotPassword from "./pages/ForgotPassword";
+import Home from "./pages/Home";
+import CreateEditShop from "./pages/CreateEditShop";
+import AddItem from "./pages/AddItem";
+import EditItem from "./pages/EditItem";
+import CartPage from "./pages/CartPage";
+import CheckOut from "./pages/CheckOut";
+import OrderPlaced from "./pages/OrderPlaced";
+import MyOrders from "./pages/MyOrders";
+import TrackOrderPage from "./pages/TrackOrderPage";
+import Shop from "./pages/Shop";
+
+import useGetMyshop from "./hooks/useGetMyShop";
+import useGetCity from "./hooks/useGetCity";
+import useGetShopByCity from "./hooks/useGetShopByCity";
+import useGetItemsByCity from "./hooks/useGetItemsByCity";
+import useGetCurrentUser from "./hooks/useGetCurrentUser";
+import useUpdateLocation from "./hooks/UseUpdateLocation";
+import useGetMyOrders from "./hooks/UseGetMyOrders";
 
 
-//backend url
-export const serverUrl = 'http://localhost:8000'
+import { io } from "socket.io-client";
+import { setSocket } from "./redux/userSlice";
+
+//server url
+export const serverUrl = "http://localhost:8000";
 
 function App() {
 
-  // all hooks
+
+  const { userData } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  //hook
   useGetCurrentUser();
+  useUpdateLocation()
   useGetCity();
   useGetMyshop();
   useGetShopByCity();
+  useGetItemsByCity();
+  useGetMyOrders();
 
+
+  //connnect socket on frontend
   useEffect(() => {
-    const socketInstance = io(serverUrl , {withCredentials:true})
-    dispatchEvent(setSocket(socketInstance))
-    socketInstance.on('connect' , (socket) => {
-      
-    })
-  } , [])
-  const {userData} = useSelector(state => state.user)
+    const socketInstance = io(serverUrl, { withCredentials: true });
+    dispatch(setSocket(socketInstance));
+    socketInstance.on("connect", () => {
+      if (userData) {
+        socketInstance.emit("identity", { userId: userData._id });
+      }
+    });
+    return () => {
+      socketInstance.disconnect();
+    };
+  }, [userData?._id]);
 
-  
+
+  //routes
   return (
     <Routes>
-
-        {/* home route */}
-        <Route
-        path="/"
-        element={ <Home />}
-      />
-
-        {/* signup route */}
-       <Route
+      <Route
         path="/signup"
-        element={ <SignUp  />}
+        element={!userData ? <SignUp /> : <Navigate to={"/"} />}
       />
-
-      {/* signin route */}
       <Route
         path="/signin"
-        element={ <SignIn />}
+        element={!userData ? <SignIn /> : <Navigate to={"/"} />}
       />
-
-      {/* forgot password route */}
       <Route
         path="/forgot-password"
-        element={<ForgotPassword />}
+        element={!userData ? <ForgotPassword /> : <Navigate to={"/"} />}
+      />
+      <Route
+        path="/"
+        element={userData ? <Home /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/create-edit-shop"
+        element={userData ? <CreateEditShop /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/add-item"
+        element={userData ? <AddItem /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/edit-item/:itemId"
+        element={userData ? <EditItem /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/cart"
+        element={userData ? <CartPage /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/checkout"
+        element={userData ? <CheckOut /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/order-placed"
+        element={userData ? <OrderPlaced /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/my-orders"
+        element={userData ? <MyOrders /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/track-order/:orderId"
+        element={userData ? <TrackOrderPage /> : <Navigate to={"/signin"} />}
+      />
+      <Route
+        path="/shop/:shopId"
+        element={userData ? <Shop /> : <Navigate to={"/signin"} />}
       />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

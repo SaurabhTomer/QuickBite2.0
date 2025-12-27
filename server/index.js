@@ -1,7 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
 dotenv.config()
-import connectDb from "./config/db.js"
+import db from "./config/db.js"
 import cookieParser from "cookie-parser"
 import authRouter from "./routes/auth.routes.js"
 import cors from "cors"
@@ -51,7 +51,7 @@ app.use("/api/order",orderRouter)
 socketHandler(io)
 
 server.listen(port,()=>{
-    connectDb()
+    db();
     console.log(`server started at ${port}`)
 })
 

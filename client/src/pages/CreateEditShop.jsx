@@ -4,20 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaUtensils } from "react-icons/fa";
 import { useState } from "react";
-import { useRef } from "react";
 import axios from "axios";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../redux/ownerSlice";
 import { ClipLoader } from "react-spinners";
 
 function CreateEditShop() {
+
   const navigate = useNavigate();
   const { myShopData } = useSelector((state) => state.owner);
   const { currentCity, currentState, currentAddress } = useSelector(
     (state) => state.user
   );
-  const dispatch = useDispatch();
-
   const [name, setName] = useState(myShopData?.name || "");
   const [address, setAddress] = useState(myShopData?.address || currentAddress);
   const [city, setCity] = useState(myShopData?.city || currentCity);
@@ -25,6 +23,7 @@ function CreateEditShop() {
   const [frontendImage, setFrontendImage] = useState(myShopData?.image || null);
   const [backendImage, setBackendImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   //handle image
   const handleImage = (e) => {
@@ -32,8 +31,7 @@ function CreateEditShop() {
     setBackendImage(file);
     setFrontendImage(URL.createObjectURL(file));
   };
-
-  //    funtion to submit form data
+//handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -46,7 +44,6 @@ function CreateEditShop() {
       if (backendImage) {
         formData.append("image", backendImage);
       }
-      
       const result = await axios.post(
         `${serverUrl}/api/shop/create-edit`,
         formData,
@@ -60,18 +57,16 @@ function CreateEditShop() {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="flex justify-center flex-col items-center p-6 bg-linear-to-br from-orange-50 relative to-white min-h-screen">
-      {/* back */}
       <div
-        className="absolute top-5 left-5 z-10 mb-5"
+        className="absolute top-5 left-5 z-10 mb-2.5"
         onClick={() => navigate("/")}
       >
         <IoIosArrowRoundBack size={35} className="text-[#ff4d2d]" />
       </div>
 
-      {/* edit or add heading */}
       <div className="max-w-lg w-full bg-white shadow-xl rounded-2xl p-8 border border-orange-100">
         <div className="flex flex-col items-center mb-6">
           <div className="bg-orange-100 p-4 rounded-full mb-4">
@@ -81,8 +76,6 @@ function CreateEditShop() {
             {myShopData ? "Edit Shop" : "Add Shop"}
           </div>
         </div>
-
-        {/* form data */}
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -96,7 +89,6 @@ function CreateEditShop() {
               value={name}
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               shop Image
@@ -117,7 +109,6 @@ function CreateEditShop() {
               </div>
             )}
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -144,7 +135,6 @@ function CreateEditShop() {
               />
             </div>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Address
@@ -157,8 +147,6 @@ function CreateEditShop() {
               value={address}
             />
           </div>
-
-          {/* button */}
           <button
             className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer"
             disabled={loading}

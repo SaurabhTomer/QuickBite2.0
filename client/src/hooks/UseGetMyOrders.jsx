@@ -6,28 +6,25 @@ import { setMyOrders, setUserData } from '../redux/userSlice'
 import { setMyShopData } from '../redux/ownerSlice'
 
 function useGetMyOrders() {
-
-    const dispatch = useDispatch()
-    const { userData } = useSelector(state => state.user)
-
-    useEffect(() => {
-        //fetching orders data for role(user , owner)
-        const fetchOrders = async () => {
-            try {
-                const result = await axios.get(`${serverUrl}/api/order/my-orders`, { withCredentials: true })
-                dispatch(setMyOrders(result.data))
+    const dispatch=useDispatch()
+    const {userData}=useSelector(state=>state.user)
+  useEffect(()=>{
+  const fetchOrders=async () => {
+    try {
+           const result=await axios.get(`${serverUrl}/api/order/my-orders`,{withCredentials:true})
+            dispatch(setMyOrders(result.data))
+   
 
 
+    } catch (error) {
+        console.log(error)
+    }
+}
+  fetchOrders()
 
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        fetchOrders()
-
-
-
-    }, [userData])
+ 
+  
+  },[userData])
 }
 
 export default useGetMyOrders

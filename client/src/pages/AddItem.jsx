@@ -9,15 +9,10 @@ import axios from "axios";
 import { serverUrl } from "../App";
 import { setMyShopData } from "../redux/ownerSlice";
 import { ClipLoader } from "react-spinners";
-
-
-
 function AddItem() {
-    
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const { myShopData } = useSelector((state) => state.owner);
-
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -38,23 +33,16 @@ function AddItem() {
     "Fast Food",
     "Others",
   ];
+  const dispatch = useDispatch();
 
-  
- const handleImage = (e) => {
-  // Get the first selected file from the file input
-  const file = e.target.files[0];
+  //handle image 
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setBackendImage(file);
+    setFrontendImage(URL.createObjectURL(file));
+  };
 
-  // Store the actual image file
-  // This will be sent to the backend (e.g., via FormData)
-  setBackendImage(file);
-
-  // Create a temporary local URL for the image file
-  // This is used to preview the image on the frontend
-  setFrontendImage(URL.createObjectURL(file));
-};
-
-
-//   handler function  submit form data to add item
+  //hndle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -80,11 +68,8 @@ function AddItem() {
       setLoading(false);
     }
   };
-
-
   return (
     <div className="flex justify-center flex-col items-center p-6 bg-linear-to-br from-orange-50 relative to-white min-h-screen">
-        {/* back arrow */}
       <div
         className="absolute top-5 left-5 z-10 mb-2.5"
         onClick={() => navigate("/")}
@@ -93,17 +78,13 @@ function AddItem() {
       </div>
 
       <div className="max-w-lg w-full bg-white shadow-xl rounded-2xl p-8 border border-orange-100">
-        {/* icon of food and add form */}
         <div className="flex flex-col items-center mb-6">
           <div className="bg-orange-100 p-4 rounded-full mb-4">
             <FaUtensils className="text-[#ff4d2d] w-16 h-16" />
           </div>
           <div className="text-3xl font-extrabold text-gray-900">Add Food</div>
         </div>
-
-        {/* form to submit data */}
         <form className="space-y-5" onSubmit={handleSubmit}>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Name
@@ -116,7 +97,6 @@ function AddItem() {
               value={name}
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Food Image
@@ -137,7 +117,6 @@ function AddItem() {
               </div>
             )}
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Price
@@ -150,7 +129,6 @@ function AddItem() {
               value={price}
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Select Category
@@ -160,7 +138,6 @@ function AddItem() {
               onChange={(e) => setCategory(e.target.value)}
               value={category}
             >
-                {/* categories option  */}
               <option value="">select Category</option>
               {categories.map((cate, index) => (
                 <option value={cate} key={index}>
@@ -169,7 +146,6 @@ function AddItem() {
               ))}
             </select>
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Select Food Type
@@ -184,7 +160,6 @@ function AddItem() {
             </select>
           </div>
 
-        {/* button */}
           <button
             className="w-full bg-[#ff4d2d] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all duration-200 cursor-pointer"
             disabled={loading}
