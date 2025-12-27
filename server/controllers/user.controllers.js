@@ -26,7 +26,7 @@ export const getCurrentUser=async (req,res) => {
 export const updateUserLocation=async (req,res) => {
     try {
         const {lat,lon}=req.body
-        
+        //update  delivery boy location 
         const user=await User.findByIdAndUpdate(req.userId,{
             location:{
                 type:'Point',
