@@ -21,6 +21,33 @@ export const socketHandler = (io) => {
       }
     })
 
+    //update location of delivery boy real time
+        socket.on('updateLocation', async ({ latitude, longitude, userId }) => {
+      try {
+        const user = await User.findByIdAndUpdate(userId, {
+          location: {
+            type: 'Point',
+            coordinates: [longitude, latitude]
+          },
+          isOnline: true,
+          socketId: socket.id
+        })
+
+        if (user) {
+          io.emit('updateDeliveryLocation',{
+            deliveryBoyId:userId,
+            latitude,
+            longitude
+          })
+        }
+
+
+      } catch (error) {
+          console.log('updateDeliveryLocation error')
+      }
+    })
+
+
     // Run when client disconnects
     socket.on('disconnect', async () => {
       try {
