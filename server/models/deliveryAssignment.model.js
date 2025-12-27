@@ -13,18 +13,18 @@ const deliveryAssignmentSchema = new mongoose.Schema({
          type: mongoose.Schema.Types.ObjectId,
          required:true
     },
-    brodcastedTo:[              // to which delivery person this order send to accept
+    brodcastedTo:[
         {
          type: mongoose.Schema.Types.ObjectId,
          ref:"User"
     }
     ],
-    assignedTo:{        //whi accept it
+    assignedTo:{
         type: mongoose.Schema.Types.ObjectId,
          ref:"User",
          default:null
     },
-    status:{        // is this completed 
+    status:{
         type:String,
         enum:["brodcasted","assigned","completed"],
         default:"brodcasted"

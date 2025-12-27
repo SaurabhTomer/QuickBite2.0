@@ -15,8 +15,7 @@ const itemSchema = new mongoose.Schema({
     },
     category: {
         type: String,
-        enum: [
-            "Snacks",
+        enum: ["Snacks",
             "Main Course",
             "Desserts",
             "Pizza",
@@ -44,11 +43,7 @@ const itemSchema = new mongoose.Schema({
     average:{type:Number,default:0},
     count:{type:Number,default:0}
    }
-
-
 }, { timestamps: true })
 
-
-const Item = mongoose.model("Item",itemSchema)
-
+const Item=mongoose.model("Item",itemSchema)
 export default Item
